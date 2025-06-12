@@ -1,0 +1,12 @@
+train_data: /hdd/Datasets/WikiText-2/data/train.txt
+gpu_id: 0
+batch_size: 2
+epochs: 1
+learning_rate: 0.00001
+log_interval: 100
+output_dir: /hdd/train_logs/LLaMA-Inspired-Model/run1
+vocab_size: 50257
+embedding_dim: 256
+context_length: 256
+num_heads: 8
+num_decoders: 8
