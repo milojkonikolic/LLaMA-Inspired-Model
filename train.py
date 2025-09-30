@@ -3,10 +3,19 @@ import argparse
 import yaml
 import torch
 from tensorboardX import SummaryWriter
+from tqdm import tqdm
 
-from model import LLaMA
-from dataset import get_data_loader, get_tokenizer
-from utils import get_logger, get_gpu, save_model, log_to_tb, log_to_console
+from llama.model import LLaMA
+from llama.dataset import get_data_loader, get_tokenizer
+from llama.utils import save_model
+from utils import get_logger, get_gpu, log_to_tb, log_to_console
+
+
+def save_config(config):
+    os.makedirs(config["output_dir"], exist_ok=True)
+    config_dst = os.path.join(config["output_dir"], os.path.basename(args.config))
+    with open(config_dst, "w") as f:
+        yaml.safe_dump(config, f)
 
 
 def train(config, tb_writer, logger, device):
@@ -23,7 +32,7 @@ def train(config, tb_writer, logger, device):
 
     global_step = 0
     for epoch in range(config["epochs"]):
-        for batch in data_loader:
+        for batch in tqdm(data_loader):
             inputs, target = batch
             inputs = inputs.to(device)
             target = target.to(device)
@@ -56,5 +65,6 @@ if __name__ == "__main__":
     device = get_gpu(config["gpu_id"], logger)
     tb_writer = SummaryWriter(log_dir=os.path.join(config["output_dir"], "logs"))
 
-    train(config, tb_writer, logger, device)
+    save_config(config)    
 
+    train(config, tb_writer, logger, device)

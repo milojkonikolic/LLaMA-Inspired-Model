@@ -1,0 +1,5 @@
+torch>=2.4.1
+transformers>=4.30
+tensorboardX
+pyyaml
+tqdm
